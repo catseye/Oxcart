@@ -32,24 +32,43 @@ and whether it's useful for writing programs with.
 The first part.  Functions form a monoid under composition;
 there is an identity element (the identity function):
 
-    f(x) = x
+    e(x) = x
+
+and this is an identity because
+
+    (e · f)(x) = f(e(x)) = f(x)
+    (f · e)(x) = e(f(x)) = f(x)
 
 and composition is associative:
 
     ((f · g) · h) = (f · (g · h))
 
-Can we devise an identity CPS function?  Yes.
+because
 
-    f(x, κ) = κ(x)
+    ((f · g) · h) = (f · (g · h))
+    (g(f(x)) · h) = (f · (h(g(x)))
+    (h(g(f(x))) = (h(g(f(x))))
 
-And is the operation ⊕ that we've defined, associative?
+Can we devise an identity CPS function?  I think it might be:
+
+    e(x, κ) = κ(x)
+
+and this is an identity because
+
+    (e ⊕ f)(x, κ) = e(x, λs′. f(s′, κ)) = (λs′. f(s′, κ))(x) = f(x, κ)
+    (f ⊕ e)(x, κ) = f(x, λs′. e(s′, κ)) = f(x, λs′. κ(s′))) = f(x, κ)
+
+And is ⊕  associative?
 Well, let's try expanding it: (TODO)
 
     ((f ⊕ g) ⊕ h)
+    = (f(x, λs′. g(s′, κ)) ⊕ h)
+    = ...?
     …(f ⊕ g)(x, κ) = f(x, λs′. g(s′, λs″ . h(s″, κ)))
 
 Versus:
     
     (f ⊕ (g ⊕ h))
+    = (f ⊕ g(x, λs′. h(s′, κ)))
+    = ...?
     …(f ⊕ g)(x, κ) = f(x, λs′. g(s′, λs″ . h(s″, κ)))
-
