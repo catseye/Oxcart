@@ -23,6 +23,10 @@ Then composition of CPS functions can be defined as
 
     (f ⊕ g)(x, κ) = f(x, λs. g(s, κ))
 
+or alternately,
+
+    (f ⊕ g) = λ(x, κ). f(x, λs. g(s, κ))
+
 The question that remains is whether this is a workable substitute
 for conventional function composition in a concatenative language.
 
@@ -58,23 +62,53 @@ and this is an identity because
     (e ⊕ f)(x, κ) = e(x, λs. f(s, κ)) = (λs. f(s, κ))(x) = f(x, κ)
     (f ⊕ e)(x, κ) = f(x, λs. e(s, κ)) = f(x, λs. κ(s))) = f(x, κ)
 
-And is ⊕  associative?
-Well, let's try expanding it:
+And is ⊕  associative?  Well, let's try expanding it:
 
     ((f ⊕ g) ⊕ h)
-    = (f(x, λs. g(s, κ)) ⊕ h)
-    = f(x, λs. g(s, κ))(x, λs. h(s, κ))
-    = f(x, λs. g(s, λs′. h(s′, κ)))
+    
+    replace (f ⊕ g) with λ(x, κ). f(x, λs. g(s, κ)):
+
+    = (λ(x, κ). f(x, λs. g(s, κ)) ⊕ h)
+
+    replace (N ⊕ h) with λ(x, j). N(x, λt. h(t, j))
+    where N = (λ(x, κ). f(x, λs. g(s, κ)))
+    to get
+    = λ(x, j). (λ(x, κ). f(x, λs. g(s, κ)))(x, λt. h(t, j))
+
+    Now reduce (λ(x, κ). f(x, λs. g(s, κ)))(x, λt. h(t, j))
+    by replacing in the lambda body
+    x with x and
+    κ with λt. h(t, j)
+    to get
+    f(x, λs. g(s, λt. h(t, j)))
+
+    and the whole thing reads
+    = λ(x, j). f(x, λs. g(s, λt. h(t, j)))
+
+    which looks reasonable.
 
 Versus:
     
     (f ⊕ (g ⊕ h))
-    = (f ⊕ g(x, λs. h(s, κ)))
 
-    by (f ⊕ g)(x, κ) = f(x, λs. g(s, κ)),
-    rename to (f ⊕ g)(x, j) = f(x, λt. g(t, j)),
-    substitute f for f and g(x, λt. h(t, j)) for g,
-    to obtain f(x, (λs. g(x, λt. h(t, j))(s, κ)))
+    replace (g ⊕ h) with λ(x, κ). g(x, λs. h(s, κ)):
 
-    = f(x, (λs. g(x, λt. h(t, j))(s, κ)))
-    = ...
+    = (f ⊕ λ(x, κ). g(x, λs. h(s, κ)))
+
+    replace (f ⊕ N) with λ(x, j). f(x, λt. N(t, j))
+    where N = (λ(x, κ). g(x, λs. h(s, κ)))
+    to get
+    
+    = λ(x, j). f(x, λt. (λ(x, κ). g(x, λs. h(s, κ)))(t, j))
+
+    Now reduce (λ(x, κ). g(x, λs. h(s, κ)))(t, j)
+    by replacing in the lambda body
+    x with t and
+    κ with j
+    to get
+    g(t, λs. h(s, j))
+
+    and the whole thing reads
+    = λ(x, j). f(x, λt. g(t, λs. h(s, j)))
+
+Yes!  It looks like it is!
