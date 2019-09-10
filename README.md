@@ -21,7 +21,7 @@ If conventional function composition is defined as
 
 Then composition of CPS functions can be defined as
 
-    (f ⊕ g)(x, κ) = f(x, λs′. g(s′, κ))
+    (f ⊕ g)(x, κ) = f(x, λs. g(s, κ))
 
 The question that remains is whether this is a workable substitute
 for conventional function composition in a concatenative language.
@@ -55,20 +55,26 @@ Can we devise an identity CPS function?  I think it might be:
 
 and this is an identity because
 
-    (e ⊕ f)(x, κ) = e(x, λs′. f(s′, κ)) = (λs′. f(s′, κ))(x) = f(x, κ)
-    (f ⊕ e)(x, κ) = f(x, λs′. e(s′, κ)) = f(x, λs′. κ(s′))) = f(x, κ)
+    (e ⊕ f)(x, κ) = e(x, λs. f(s, κ)) = (λs. f(s, κ))(x) = f(x, κ)
+    (f ⊕ e)(x, κ) = f(x, λs. e(s, κ)) = f(x, λs. κ(s))) = f(x, κ)
 
 And is ⊕  associative?
-Well, let's try expanding it: (TODO)
+Well, let's try expanding it:
 
     ((f ⊕ g) ⊕ h)
-    = (f(x, λs′. g(s′, κ)) ⊕ h)
-    = ...?
-    …(f ⊕ g)(x, κ) = f(x, λs′. g(s′, λs″ . h(s″, κ)))
+    = (f(x, λs. g(s, κ)) ⊕ h)
+    = f(x, λs. g(s, κ))(x, λs. h(s, κ))
+    = f(x, λs. g(s, λs′. h(s′, κ)))
 
 Versus:
     
     (f ⊕ (g ⊕ h))
-    = (f ⊕ g(x, λs′. h(s′, κ)))
-    = ...?
-    …(f ⊕ g)(x, κ) = f(x, λs′. g(s′, λs″ . h(s″, κ)))
+    = (f ⊕ g(x, λs. h(s, κ)))
+
+    by (f ⊕ g)(x, κ) = f(x, λs. g(s, κ)),
+    rename to (f ⊕ g)(x, j) = f(x, λt. g(t, j)),
+    substitute f for f and g(x, λt. h(t, j)) for g,
+    to obtain f(x, (λs. g(x, λt. h(t, j))(s, κ)))
+
+    = f(x, (λs. g(x, λt. h(t, j))(s, κ)))
+    = ...
