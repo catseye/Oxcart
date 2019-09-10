@@ -3,7 +3,7 @@ Oxcart
 
 While desigining [Wagon][] the topic of continuations briefly came up.
 I didn't, at the time, think that thinking in terms of continuations
-would make designing Wagon any easier.  But I did say that a
+would make designing Wagon any easier.  But I did remark that a
 continuation-passing concatenative language sounded like an interesting
 thing in its own right.
 
@@ -11,9 +11,8 @@ Later when I began thinking about how one would make
 continuation-passing concatenative language, I immediately hit a wall:
 how do you compose two functions written in continuation-passing style?
 
-So I sat down and worked it out.
-
-Maybe you can do it, if you have a new kind of function composition.
+So I sat down and worked it out.  Maybe you can do it if you adopt a
+non-standard formulation of function composition.
 
 If conventional function composition is defined as
 
