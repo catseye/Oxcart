@@ -16,7 +16,7 @@ incr  ((Num x):xs) k      = k (Num (x+1):xs)
 decr  ((Num x):xs) k      = k (Num (x-1):xs)
 dbl   ((Num x):xs) k      = k (Num (x*2):xs)
 save  xs k                = k (Cont k:xs)
-rsr   xs@((Cont k):_) _   = k xs
+rsr   xs@((Cont j):_) _   = j xs
 swpk  xs@((Cont j):_) k   = j (Cont k:xs)
 
 
