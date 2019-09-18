@@ -1,3 +1,11 @@
+/* --- */
+
+function debug(nm, xs, k) {
+  console.log(nm, xs, k);
+}
+
+/* --- */
+
 function Push(x, xs) {
   var xs2 = xs.slice();
   xs2.push(x);
@@ -17,33 +25,46 @@ function Pop(xs) {
 /* --- */
 
 function nop(xs, k) {
+  debug("nop", xs, k);
   return k(xs);
 }
 
 function push0(xs, k) {
+  debug("push0", xs, k);
   return k(Push(0, xs));
 }
 
 function incr(xs, k) {
+  debug("incr", xs, k);
   var v = Top(xs);
   return k(Push(v + 1, Pop(xs)));
 }
 
 function dbl(xs, k) {
+  debug("dbl", xs, k);
   var v = Top(xs);
   return k(Push(v * 2, Pop(xs)));
 }
 
 function save(xs, k) {
+  debug("save", xs, k);
   return k(Push(k, xs));
 }
 
 function rsr(xs, k) {
+  debug("rsr", xs, k);
   var j = Top(xs);
   return j(Pop(xs));
 }
 
+function cont(xs, k) {
+  debug("cont", xs, k);
+  var j = Top(xs);
+  return j(xs);
+}
+
 function swpk(xs, k) {
+  debug("swpk", xs, k);
   var j = Top(xs);
   return j(Push(k, Pop(xs)));
 }
@@ -77,6 +98,9 @@ function compile(s) {
         break;
       case '$':
         f = composeCPS(f, rsr);
+        break;
+      case '~':
+        f = composeCPS(f, cont);
         break;
       case '_':
         f = composeCPS(f, swpk);

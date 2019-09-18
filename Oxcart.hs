@@ -16,7 +16,8 @@ incr  ((Num x):xs) k      = k (Num (x+1):xs)
 decr  ((Num x):xs) k      = k (Num (x-1):xs)
 dbl   ((Num x):xs) k      = k (Num (x*2):xs)
 save  xs k                = k (Cont k:xs)
-rsr   xs@((Cont j):_) _   = j xs
+rsr   ((Cont j):xs) _     = j xs
+cont  xs@((Cont j):_) _   = j xs
 swpk  xs@((Cont j):_) k   = j (Cont k:xs)
 
 
@@ -29,6 +30,7 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' 'X' = dbl
         m' '*' = save
         m' '$' = rsr
+        m' '~' = cont
         m' '_' = swpk
         composeCPS f g = \x k -> (f x (\s -> (g s k)))
 
