@@ -169,11 +169,26 @@ the reference implementation: the current stack is indicated by `>`,
 its index is printed, then `:`, then its contents, top-to-bottom.
 But only stacks that are non-empty are output.
 
-The instruction `+` pops a value from the current stack, increments
+The instruction `+` (resp. `-`) pops a value from the current stack,
+increments (resp. decrements) it, and pushes the result back onto the
+current stack.
+
+    | 0+++0--
+    = > 0:[-2,3]
+
+The instruction `X` pops a value from the current stack, doubles
 it, and pushes the result back onto the current stack.
 
-    | 0+++0++
-    = > 0:[2,3]
+    | 0+XXXX
+    = > 0:[16]
+
+The instruction `<` (resp `>`) moves one space left (resp. right)
+on the tape, changing which stack is the current stack.
+
+    | 0+XX<0+XXX<0+XXXX>
+    =  -2:[16]
+    = >-1:[8]
+    =   0:[4]
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
