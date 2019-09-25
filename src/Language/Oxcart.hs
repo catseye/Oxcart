@@ -1,4 +1,4 @@
-module Oxcart where
+module Language.Oxcart where
 
 data Elem = Num Integer
           | Cont ([Elem] -> [Elem])

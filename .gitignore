@@ -1,0 +1,5 @@
+*.hi
+*.o
+*.jsmod
+bin/*.exe
+demo/oxcart.js
