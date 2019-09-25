@@ -1,11 +1,7 @@
 module Language.Oxcart where
 
-data Elem = Num Integer
-          | Cont ([Elem] -> [Elem])
+import Language.Oxcart.Store
 
-instance Show Elem where
-    show (Num n)         = show n
-    show (Cont k)        = "#k"
 
 type Op = [Elem] -> ([Elem] -> [Elem]) -> [Elem]
 
