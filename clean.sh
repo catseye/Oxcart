@@ -1,3 +1,6 @@
 #!/bin/sh
 
-rm -f src/*.hi src/*.o src/*.jsmod bin/*.exe
+find . -name "*.o"  -exec rm {} \;
+find . -name "*.hi" -exec rm {} \;
+find . -name "*.jsmod" -exec rm {} \;
+find . -name "*.exe" -exec rm {} \;
