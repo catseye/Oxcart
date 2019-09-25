@@ -1,7 +1,7 @@
 module Main where
 
 import System.Environment
-import Language.Oxcart (run)
+import Language.Oxcart.ConcatEval (run)
 
 
 main = do

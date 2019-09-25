@@ -3,7 +3,7 @@ module Main where
 import Haste.DOM (withElems, getValue, setProp)
 import Haste.Events (onEvent, MouseEvent(Click))
 
-import Language.Oxcart (run)
+import Language.Oxcart.ConcatEval (run)
 
 
 main = withElems ["prog", "result", "run-button"] driver
