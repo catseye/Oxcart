@@ -32,6 +32,9 @@ for conventional function composition in a concatenative language.
 This question has two parts: whether it's algebraically valid,
 and whether it's useful for writing programs with.
 
+Algebraic properties of ⊕
+-------------------------
+
 The first part.  Functions form a monoid under composition;
 there is an identity element (the identity function):
 
@@ -67,12 +70,13 @@ And is ⊕  associative?  Well, let's try expanding it:
     
     replace (f ⊕ g) with λ(x, κ). f(x, λs. g(s, κ)):
 
-    = (λ(x, κ). f(x, λs. g(s, κ)) ⊕ h)
+    (λ(x, κ). f(x, λs. g(s, κ)) ⊕ h)
 
     replace (N ⊕ h) with λ(x, j). N(x, λt. h(t, j))
     where N = (λ(x, κ). f(x, λs. g(s, κ)))
     to get
-    = λ(x, j). (λ(x, κ). f(x, λs. g(s, κ)))(x, λt. h(t, j))
+
+    λ(x, j). (λ(x, κ). f(x, λs. g(s, κ)))(x, λt. h(t, j))
 
     Now reduce (λ(x, κ). f(x, λs. g(s, κ)))(x, λt. h(t, j))
     by replacing in the lambda body
@@ -82,7 +86,8 @@ And is ⊕  associative?  Well, let's try expanding it:
     f(x, λs. g(s, λt. h(t, j)))
 
     and the whole thing reads
-    = λ(x, j). f(x, λs. g(s, λt. h(t, j)))
+
+    λ(x, j). f(x, λs. g(s, λt. h(t, j)))
 
     which looks reasonable.
 
@@ -92,13 +97,13 @@ Versus:
 
     replace (g ⊕ h) with λ(x, κ). g(x, λs. h(s, κ)):
 
-    = (f ⊕ λ(x, κ). g(x, λs. h(s, κ)))
+    (f ⊕ λ(x, κ). g(x, λs. h(s, κ)))
 
     replace (f ⊕ N) with λ(x, j). f(x, λt. N(t, j))
     where N = (λ(x, κ). g(x, λs. h(s, κ)))
     to get
     
-    = λ(x, j). f(x, λt. (λ(x, κ). g(x, λs. h(s, κ)))(t, j))
+    λ(x, j). f(x, λt. (λ(x, κ). g(x, λs. h(s, κ)))(t, j))
 
     Now reduce (λ(x, κ). g(x, λs. h(s, κ)))(t, j)
     by replacing in the lambda body
@@ -108,6 +113,68 @@ Versus:
     g(t, λs. h(s, j))
 
     and the whole thing reads
-    = λ(x, j). f(x, λt. g(t, λs. h(s, j)))
+
+    λ(x, j). f(x, λt. g(t, λs. h(s, j)))
 
 Yes!  It looks like it is!
+
+A concatenative language with ⊕
+-----------------------------
+
+Now the second part.  This requires us to actually try to define some
+kind of concatenative language around this formulation of composition,
+and see what kind of programs we can write in it.
+
+Like [Carriage][] and [Equipage][] and [Wagon][], this will be
+a "purely concatenative language": the entire program is a single
+string of sequentially concatenated symbols, and each symbol
+represents a function, and the functions are sequentially composed
+in the same manner the symbols are concatenated.  More to the point,
+you don't get to name anything or to nest anything inside anything else.
+
+Unlike [Wagon][] we won't be concerned with expressing control
+outside of the program state.  Indeed, first-class continuations are
+a way to reify control as data, so we'll happily make them part of
+the data store.
+
+I'm sure we could get away with having a single stack for the store,
+like most concatenative languages, but to make things easier (maybe)
+let's deviate slightly.  A store, in Oxcart, is a tape of stacks.
+That is, it's an unbounded array of stacks, plus an index into that
+array.  The index is initially 0 but can be changed; the stack that
+it points to is referred to as "the current stack", and most
+operations operate on the current stack.
+
+Each stack is strictly FIFO and initially empty, and each stack cell
+can hold either an int or a continuation.  Ints are generally assumed
+to be 64 bits in this day and age, but it pays to be cautious.
+
+    -> Tests for functionality "Evaluate Oxcart Program"
+
+    -> Functionality "Evaluate Oxcart Program" is implemented by
+    -> shell command "bin/oxcart %(test-body-file)"
+
+The instruction `0` pushes a zero onto the current stack.
+
+    | 0
+    = > 0:[0]
+
+Whitespace is a no-op.
+
+    |       
+    = 
+
+These demonstrate how Oxcart stores are represented on output by
+the reference implementation: the current stack is indicated by `>`,
+its index is printed, then `:`, then its contents, top-to-bottom.
+But only stacks that are non-empty are output.
+
+The instruction `+` pops a value from the current stack, increments
+it, and pushes the result back onto the current stack.
+
+    | 0+++0++
+    = > 0:[2,3]
+
+[Carriage]: https://catseye.tc/node/Carriage
+[Equipage]: https://catseye.tc/node/Equipage
+[Wagon]: https://catseye.tc/node/Wagon

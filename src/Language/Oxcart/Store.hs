@@ -3,7 +3,7 @@ module Language.Oxcart.Store where
 import qualified Data.Map.Strict as Map
 
 
-data Elem = Num Integer
+data Elem = Num Int
           | Cont ([Elem] -> [Elem])
 
 instance Show Elem where
@@ -17,16 +17,15 @@ data Store = Store {
 
 instance Show Store where
     show Store{ index=index, array=array } =
-        let
+        concat $ map renderStack (Map.toList array)
+        where
+            renderStack (i, []) = ""
             renderStack (i, s) =
               (
                 (if index == i then ">" else " ") ++
                 (if i < 0 then "" else " ") ++
                 (show i) ++ ":" ++ (show s) ++ "\n"
               )
-        in
-            concat $ map renderStack (Map.toList array)
-
 
 empty = Store{ index=0, array=Map.empty }
 
