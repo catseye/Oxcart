@@ -32,6 +32,14 @@ push0 :: Op
 push0 st k = k (push (Num 0) st)
 
 
+left :: Op
+left st k = k (shift (-1) st)
+
+
+right :: Op
+right st k = k (shift 1 st)
+
+
 incr :: Op
 incr st k = let (Just (Num v), st') = pop st in k (push (Num (v+1)) st')
 
@@ -59,6 +67,8 @@ m [] = nop
 m (x:xs) = (m' x) `composeCPS` (m xs)
     where
         m' '0' = push0
+        m' '<' = left
+        m' '>' = right
         m' '+' = incr
         m' '-' = decr
         m' 'X' = dbl

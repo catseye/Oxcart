@@ -13,8 +13,19 @@ instance Show Elem where
 data Store = Store {
     index :: Integer,
     array :: Map.Map Integer [Elem]
-} deriving (Show)
+}
 
+instance Show Store where
+    show Store{ index=index, array=array } =
+        let
+            renderStack (i, s) =
+              (
+                (if index == i then ">" else " ") ++
+                (if i < 0 then "" else " ") ++
+                (show i) ++ ":" ++ (show s) ++ "\n"
+              )
+        in
+            concat $ map renderStack (Map.toList array)
 
 
 empty = Store{ index=0, array=Map.empty }
@@ -33,3 +44,5 @@ pop st@Store{ index=index, array=array } =
             (Just v, st{ array=Map.insert index stack' array })
         _ ->
             (Nothing, st)
+
+shift amount st@Store{ index=index } = st{ index=index + amount }

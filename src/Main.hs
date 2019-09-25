@@ -7,4 +7,4 @@ import Language.Oxcart.ConcatEval (run)
 main = do
     [fileName] <- getArgs
     c <- readFile fileName
-    putStrLn $ show $ run c
+    putStr $ show $ run c
