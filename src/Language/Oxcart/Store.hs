@@ -10,8 +10,6 @@ instance Show Elem where
     show (Num n)         = show n
     show (Cont k)        = "#k"
 
-type Op = [Elem] -> ([Elem] -> [Elem]) -> [Elem]
-
 data Store = Store {
     index :: Integer,
     array :: Map.Map Integer [Elem]
