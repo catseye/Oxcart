@@ -69,8 +69,22 @@ cright :: Op
 cright st k = k $ carry 1 st
 
 
--- save  xs k                = k (Cont k:xs)
--- rsr   ((Cont j):xs) _     = j xs
+save :: Op
+save st k = k $ push (Cont k) st
+
+
+rsr :: Op
+rsr st k =
+    let
+        (Just (Num n), st') = pop st
+        (Just v, st'') = pop st'
+    in
+        case (n, v) of
+            (0, _)        -> k st''
+            (_, (Cont j)) -> j st''
+            (_, _)        -> k st''
+
+
 -- cont  xs@((Cont j):_) _   = j xs
 -- swpk  xs@((Cont j):_) k   = j (Cont k:xs)
 
@@ -91,8 +105,8 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' '^' = incr
         m' 'v' = decr
         m' 'X' = dbl
-        -- m' '*' = save
-        -- m' '$' = rsr
+        m' 'S' = save
+        m' '$' = rsr
         -- m' '~' = cont
         -- m' '_' = swpk
         m' ' ' = nop

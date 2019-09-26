@@ -4,7 +4,7 @@ import qualified Data.Map.Strict as Map
 
 
 data Elem = Num Int
-          | Cont ([Elem] -> [Elem])
+          | Cont (Store -> Store)
 
 instance Show Elem where
     show (Num n)         = show n

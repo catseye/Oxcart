@@ -199,6 +199,23 @@ onto the new current stack.
     = >-1:[16]
     =   0:[4]
 
+The instruction `S` pushes the current continuation onto the stack.
+Note that continuations don't have a defined representation other
+than `#k`.
+
+    | S
+    = > 0:[#k]
+
+The instruction `$` pops a first value off the stack, then a second
+value off the stack.  If the first value is non-zero, it replaces
+the current continuation with the second value, and continues.
+
+    | S0$
+    = 
+
+    -- | S0^$
+    -- = > 0:[]
+
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
 [Wagon]: https://catseye.tc/node/Wagon
