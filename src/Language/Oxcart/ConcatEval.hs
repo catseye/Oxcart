@@ -41,15 +41,32 @@ right st k = k (shift 1 st)
 
 
 incr :: Op
-incr st k = let (Just (Num v), st') = pop st in k (push (Num (v+1)) st')
+incr st k = let (Just (Num n), st') = pop st in k (push (Num (n+1)) st')
 
 
 decr :: Op
-decr st k = let (Just (Num v), st') = pop st in k (push (Num (v-1)) st')
+decr st k = let (Just (Num n), st') = pop st in k (push (Num (n-1)) st')
 
 
 dbl :: Op
-dbl st k = let (Just (Num v), st') = pop st in k (push (Num (v*2)) st')
+dbl st k = let (Just (Num n), st') = pop st in k (push (Num (n*2)) st')
+
+
+carry delta st =
+    let
+        (Just v, st') = pop st
+        st'' = (shift delta st')
+        st''' = push v st''
+    in
+        st'''
+
+
+cleft :: Op
+cleft st k = k $ carry (-1) st
+
+
+cright :: Op
+cright st k = k $ carry 1 st
 
 
 -- save  xs k                = k (Cont k:xs)
@@ -69,6 +86,8 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' '0' = push0
         m' '<' = left
         m' '>' = right
+        m' '(' = cleft
+        m' ')' = cright
         m' '+' = incr
         m' '-' = decr
         m' 'X' = dbl

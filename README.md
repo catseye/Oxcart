@@ -190,6 +190,15 @@ on the tape, changing which stack is the current stack.
     = >-1:[8]
     =   0:[4]
 
+The instruction `(` (resp `)`) pops a value off the current stack,
+moves one space left (resp. right) on the tape, and pushes the value
+onto the new current stack.
+
+    | 0+XX<0+XXX(0+XXXX)
+    =  -2:[8]
+    = >-1:[16]
+    =   0:[4]
+
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
 [Wagon]: https://catseye.tc/node/Wagon
