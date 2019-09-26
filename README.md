@@ -169,23 +169,23 @@ the reference implementation: the current stack is indicated by `>`,
 its index is printed, then `:`, then its contents, top-to-bottom.
 But only stacks that are non-empty are output.
 
-The instruction `+` (resp. `-`) pops a value from the current stack,
+The instruction `^` (resp. `v`) pops a value from the current stack,
 increments (resp. decrements) it, and pushes the result back onto the
 current stack.
 
-    | 0+++0--
+    | 0^^^0vv
     = > 0:[-2,3]
 
 The instruction `X` pops a value from the current stack, doubles
 it, and pushes the result back onto the current stack.
 
-    | 0+XXXX
+    | 0^XXXX
     = > 0:[16]
 
 The instruction `<` (resp `>`) moves one space left (resp. right)
 on the tape, changing which stack is the current stack.
 
-    | 0+XX<0+XXX<0+XXXX>
+    | 0^XX<0^XXX<0^XXXX>
     =  -2:[16]
     = >-1:[8]
     =   0:[4]
@@ -194,7 +194,7 @@ The instruction `(` (resp `)`) pops a value off the current stack,
 moves one space left (resp. right) on the tape, and pushes the value
 onto the new current stack.
 
-    | 0+XX<0+XXX(0+XXXX)
+    | 0^XX<0^XXX(0^XXXX)
     =  -2:[8]
     = >-1:[16]
     =   0:[4]
