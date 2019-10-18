@@ -182,6 +182,18 @@ it, and pushes the result back onto the current stack.
     | 0^XXXX
     = > 0:[16]
 
+The instruction `:` pops a value from the current stack and pushes
+two copies of the value back on the stack.
+
+    | 0^XXX:^
+    = > 0:[9,8]
+
+The instruction `$` pops a value from the current stack and discards
+it.
+
+    | 0^XXX$
+    = 
+
 The instruction `<` (resp `>`) moves one space left (resp. right)
 on the tape, changing which stack is the current stack.
 
@@ -206,14 +218,14 @@ than `#k`.
     | S
     = > 0:[#k]
 
-The instruction `$` pops a first value off the stack, then a second
+The instruction `%` pops a first value off the stack, then a second
 value off the stack.  If the first value is non-zero, it replaces
 the current continuation with the second value, and continues.
 
-    | S0$
+    | S0%
     = 
 
-    -- | S0^$
+    -- | S0^%
     -- = > 0:[]
 
 [Carriage]: https://catseye.tc/node/Carriage

@@ -44,6 +44,8 @@ right st k = k (shift 1 st)
 incr st k = let (Just (Num n), st') = pop st in k (push (Num (n+1)) st')
 decr st k = let (Just (Num n), st') = pop st in k (push (Num (n-1)) st')
 dbl st k = let (Just (Num n), st') = pop st in k (push (Num (n*2)) st')
+dup st k = let (Just v, st') = pop st in k (push v (push v st'))
+pop' st k = let (Just v, st') = pop st in k st'
 cleft st k = k $ carry (-1) st
 cright st k = k $ carry 1 st
 save st k = k $ push (Cont k) st
@@ -79,8 +81,10 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' '^' = incr
         m' 'v' = decr
         m' 'X' = dbl
+        m' ':' = dup
+        m' '$' = pop'
         m' 'S' = save
-        m' '$' = rsr
+        m' '%' = rsr
         -- m' '~' = cont
         -- m' '_' = swpk
         m' ' ' = nop
