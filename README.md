@@ -211,6 +211,15 @@ onto the new current stack.
     = >-1:[16]
     =   0:[4]
 
+Using the above four instructions we can perform a "swap", or in
+fact a "rotate" of arbitrary finite depth.
+
+    | 0^0^^
+    = > 0:[2,1]
+
+    | 0^0^^)<(>>(<)
+    = > 0:[1,2]
+
 The instruction `S` pushes the current continuation onto the stack.
 Note that continuations don't have a defined representation other
 than `#k`.
@@ -219,14 +228,28 @@ than `#k`.
     = > 0:[#k]
 
 The instruction `%` pops a first value off the stack, then a second
-value off the stack.  If the first value is non-zero, it replaces
-the current continuation with the second value, and continues.
+value off the stack.
+
+If the first value is zero, nothing happens and evaluation continues
+as usual.
 
     | S0%
     = 
 
-    -- | S0^%
-    -- = > 0:[]
+But if the first value is non-zero, it replaces the current continuation
+with the second value, and continues with that continuation.
+
+    | 0^^^0S0^%
+    = > 0:[3]
+
+In the preceding example, when `%` is evaluated, the 1 pushed by the `0^`
+just before the `%`, and the continuation pushed by `S`, are popped off
+the stack (leaving 0 and 3 on the stack.)  The 1 is judged to be non-zero,
+so the continuation pushed by `S` is continued.  That continuation
+represents the remainder of the program that consists of `0^%`.  So a
+1 is pushed onto the stack and `%` is evaluated again.  But this time
+`%` gets a 1 and a 0, which is not a continuation, so things continue
+as usual.  The result is only the initial 3 on the stack.
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
