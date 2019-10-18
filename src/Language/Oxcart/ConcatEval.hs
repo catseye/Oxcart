@@ -20,37 +20,8 @@ type Op = Store -> (Store -> Store) -> Store
 
 
 --
--- Some basic operations.
+-- Helper function.
 --
-
-
-nop :: Op
-nop st k = k st
-
-
-push0 :: Op
-push0 st k = k (push (Num 0) st)
-
-
-left :: Op
-left st k = k (shift (-1) st)
-
-
-right :: Op
-right st k = k (shift 1 st)
-
-
-incr :: Op
-incr st k = let (Just (Num n), st') = pop st in k (push (Num (n+1)) st')
-
-
-decr :: Op
-decr st k = let (Just (Num n), st') = pop st in k (push (Num (n-1)) st')
-
-
-dbl :: Op
-dbl st k = let (Just (Num n), st') = pop st in k (push (Num (n*2)) st')
-
 
 carry delta st =
     let
@@ -61,19 +32,21 @@ carry delta st =
         st'''
 
 
-cleft :: Op
+--
+-- Some basic operations.  These are all type Op.
+--
+
+
+nop st k = k st
+push0 st k = k (push (Num 0) st)
+left st k = k (shift (-1) st)
+right st k = k (shift 1 st)
+incr st k = let (Just (Num n), st') = pop st in k (push (Num (n+1)) st')
+decr st k = let (Just (Num n), st') = pop st in k (push (Num (n-1)) st')
+dbl st k = let (Just (Num n), st') = pop st in k (push (Num (n*2)) st')
 cleft st k = k $ carry (-1) st
-
-
-cright :: Op
 cright st k = k $ carry 1 st
-
-
-save :: Op
 save st k = k $ push (Cont k) st
-
-
-rsr :: Op
 rsr st k =
     let
         (Just (Num n), st') = pop st
@@ -94,6 +67,7 @@ rsr st k =
 -- with strings.
 --
 
+m :: String -> Op
 m [] = nop
 m (x:xs) = (m' x) `composeCPS` (m xs)
     where
@@ -112,4 +86,5 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' ' ' = nop
         m' '\n' = nop
 
+run :: String -> Store
 run s = m s empty id
