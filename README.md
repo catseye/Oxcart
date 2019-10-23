@@ -149,6 +149,8 @@ Each stack is strictly FIFO and initially empty, and each stack cell
 can hold either an int or a continuation.  Ints are generally assumed
 to be 64 bits in this day and age, but it pays to be cautious.
 
+### Basic Operations
+
     -> Tests for functionality "Evaluate Oxcart Program"
 
     -> Functionality "Evaluate Oxcart Program" is implemented by
@@ -220,6 +222,8 @@ fact a "rotate" of arbitrary finite depth.
     | 0^0^^)<(>>(<)
     = > 0:[1,2]
 
+### Operations involving continuations
+
 The instruction `S` pushes the current continuation onto the stack.
 Note that continuations don't have a defined representation other
 than `#k`.
@@ -250,6 +254,25 @@ represents the remainder of the program that consists of `0^%`.  So a
 1 is pushed onto the stack and `%` is evaluated again.  But this time
 `%` gets a 1 and a 0, which is not a continuation, so things continue
 as usual.  The result is only the initial 3 on the stack.
+
+### Infinite loop
+
+So we want to write an infinite loop.  In high-level terms, we need to
+save the current continuation as k.  (Note that when we continue k,
+we'll end up back at this point.)  Then we want to continue k.
+(Note that, since we end up back at that point, we never get here.)
+
+We can write this in Oxcart as:
+
+    S:0^%
+
+(We don't write this as a Falderal test, because we want all our tests
+to terminate.  But it is provided as a discrete program in the `eg/`
+directory, if you want to run it.)
+
+### Controlled loop
+
+TBW
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
