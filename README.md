@@ -280,27 +280,57 @@ a copy of _n_ and decrement it to obtain _n'_.  Then we make a copy
 of _n'_ and test if it's zero.  If it is, we're done.  If not, we
 continue _k_.
 
-We can twrite this in Oxcart as:
+We can write this in Oxcart as:
 
-    move left
-    push 10 on stack
-    move right
-    push current continuation on stack
-    duplicate
-    move left
-    duplicate
-    decrement
-    duplicate
-    transfer right
-    continue conditionally
+*   move left
+*   push 10 on stack
+*   move right
+*   push current continuation on stack
+*   duplicate
+*   move left
+*   duplicate
+*   decrement
+*   duplicate
+*   transfer right
+*   continue conditionally
 
-    | <0^^^^^^^^^^>S:<:v:)%
+Or, as an actual Oxcart program:
+
+    |
+    |    <0^^^^^^^^^^>S:<:v:)%
+    | 
     =  -1:[0,1,2,3,4,5,6,7,8,9,10]
     = > 0:[#k]
 
 ### While loop?
 
-TBW
+You may have noticed that the "current continuation" is a very palpable
+concept in Oxcart; using the infinite loop program to illustrate, it is
+almost as if concatenating the program symbols results in a program
+structured like this:
+
+    S→:→0→^→%→■
+
+where each → is a continuation, and execution happens by executing an
+instruction, then just following the attached continuation arrow to get
+the next thing to execute.  An instruction like `S` has the effect of
+pushing the arrow (and, virtually, everything that follows it) onto
+the stack, and an instruction like `%` does have an arrow attached to
+it, but that arrow is ignored — an arrow popped off the stack is used
+instead.
+
+But one implication of this is that an Oxcart program can't access
+any continuation it hasn't already "seen", i.e. any continuations that
+it might encounter down the line, in the future.  In more pedestrian
+terms, you can't denote a forward jump.
+
+So, while we've demonstrated it's possible to write a controlled loop,
+it is in fact a "repeat" (or "do") type loop, where the loop body is
+always executed at least once.  What about a "while" type loop, where
+the loop body might not be executed at all, if the loop condition isn't
+true when the loop starts?
+
+...
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
