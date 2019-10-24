@@ -7,8 +7,8 @@ would make designing Wagon any easier.  But I did remark that a
 continuation-passing concatenative language sounded like an interesting
 thing in its own right.
 
-Later when I began thinking about how one would make 
-continuation-passing concatenative language, I immediately hit a wall:
+After Wagon was finished, I began thinking about how one would make
+continuation-passing concatenative language, but I immediately hit a wall:
 how do you compose two functions written in continuation-passing style?
 
 So I sat down and worked it out.  Maybe you can do it, I thought, if you
@@ -18,7 +18,8 @@ If conventional function composition is defined as
 
     (f ∘ g)(x) = g(f(x))
 
-Then composition of CPS functions can be defined as
+then (rather arbitrarily picking the symbol ⊛ to denote it) composition
+of CPS functions can be defined as
 
     (f ⊛ g)(x, κ) = f(x, λs. g(s, κ))
 
