@@ -399,36 +399,26 @@ The problem is that we want to switch back from the
 garbage stack to the real stack if previously we were on
 the garbage stack.
 
-Can we can write this in Oxcart?  We may have to add a few
-instructions.  Possibly "save stack index on stack" and
-"restore stack index".  Also "pop value and adjust stack index
-based on it".  Well, if we had these, we could write
+Can we can write this in Oxcart?
 
 *   transfer left (to move n to the cycling stack, -1)
 *   move left (to garbage stack, -2)
 *   push 1 on stack
-*   move right
-*   move right
+*   reset to the main stack
 
 *   push current continuation on stack
 *   duplicate
 
 *   move left
 *   duplicate
-*   pop and if value is zero move left
-
-(we make a copy of _n_ and decrement it to obtain _n'_.
-Then we make a copy of _n'_ and test if it's zero.
-If it is, we're done.  If not, we continue _k_.)
+*   pop and if value is zero move one stack to the left (we may need to invert the sense of Y)
 
 *   duplicate
 *   decrement
 *   duplicate
 *   transfer right (this is the test value)
-*   ... pop and if value is zero move right?  somehow?
+*   reset to the main stack
 *   continue conditionally
-
-Ughhh
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
