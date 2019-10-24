@@ -38,16 +38,28 @@ carry delta st =
 
 
 nop st k = k st
-push0 st k = k (push (Num 0) st)
-left st k = k (shift (-1) st)
-right st k = k (shift 1 st)
+push0 st k = k $ push (Num 0) st
 incr st k = let (Just (Num n), st') = pop st in k (push (Num (n+1)) st')
 decr st k = let (Just (Num n), st') = pop st in k (push (Num (n-1)) st')
 dbl st k = let (Just (Num n), st') = pop st in k (push (Num (n*2)) st')
 dup st k = let (Just v, st') = pop st in k (push v (push v st'))
 pop' st k = let (Just v, st') = pop st in k st'
+
+left st k = k $ shift (-1) st
+right st k = k $ shift 1 st
 cleft st k = k $ carry (-1) st
 cright st k = k $ carry 1 st
+reset st k = k $ moveTo 0 st
+swch st k =
+    let
+        (Just (Num n), st') = pop st
+        (Just v, st'') = pop st'
+    in
+        case (n, v) of
+            (0, _)        -> k st''
+            (_, (Num d))  -> k (shift (fromIntegral d) st'')
+            (_, _)        -> k st''
+
 save st k = k $ push (Cont k) st
 rsr st k =
     let
@@ -74,15 +86,19 @@ m [] = nop
 m (x:xs) = (m' x) `composeCPS` (m xs)
     where
         m' '0' = push0
-        m' '<' = left
-        m' '>' = right
-        m' '(' = cleft
-        m' ')' = cright
         m' '^' = incr
         m' 'v' = decr
         m' 'X' = dbl
         m' ':' = dup
         m' '$' = pop'
+
+        m' '<' = left
+        m' '>' = right
+        m' '(' = cleft
+        m' ')' = cright
+        m' '\'' = reset
+        m' 'Y' = swch
+
         m' 'S' = save
         m' '%' = rsr
         -- m' '~' = cont

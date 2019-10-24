@@ -45,3 +45,4 @@ pop st@Store{ index=index, array=array } =
             (Nothing, st)
 
 shift amount st@Store{ index=index } = st{ index=index + amount }
+moveTo index st = st{ index=index }

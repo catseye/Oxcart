@@ -150,7 +150,7 @@ Each stack is strictly FIFO and initially empty, and each stack cell
 can hold either an int or a continuation.  Ints are generally assumed
 to be 64 bits in this day and age, but it pays to be cautious.
 
-### Basic Operations
+### Basic operations
 
     -> Tests for functionality "Evaluate Oxcart Program"
 
@@ -197,6 +197,8 @@ it.
     | 0^XXX$
     = 
 
+### Navigating the stacks
+
 The instruction `<` (resp `>`) moves one space left (resp. right)
 on the tape, changing which stack is the current stack.
 
@@ -222,6 +224,37 @@ fact a "rotate" of arbitrary finite depth.
 
     | 0^0^^)<(>>(<)
     = > 0:[1,2]
+
+The instruction `'` (apostrophe) makes stack zero (the stack that
+was current when the program started) the current stack, no matter
+what stack is currently the current stack.
+
+    | >>>'0^>>'0^
+    = > 0:[1,1]
+
+The instruction `Y` pops a first value off the stack, then a second
+value off the stack.
+
+If the first value is zero, nothing happens and evaluation continues
+as usual.
+
+    | 0^^0^0Y0^^^
+    = > 0:[3,2]
+
+If the first value is non-zero, the second value is added to the
+position of the tape cell (negative values go left, positive values
+go right).
+
+    | 0^^0^0^Y0^^^
+    =   0:[2]
+    = > 1:[3]
+
+    | 0^^0v0^Y0^^^
+    = >-1:[3]
+    =   0:[2]
+
+Indeed, `<` and `>` can be thought of as just shorthands for
+`0v0^Y` and `0^0^Y`.
 
 ### Operations involving continuations
 
