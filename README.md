@@ -310,14 +310,14 @@ concept in Oxcart; using the infinite loop program to illustrate, it is
 almost as if concatenating the program symbols results in a program
 structured like this:
 
-    S→:→0→^→%→■
+    S → : → 0 → ^ → % → ■
 
-where each → is a continuation, and execution happens by executing an
-instruction, then just following the attached continuation arrow to get
-the next thing to execute.  An instruction like `S` has the effect of
-pushing the arrow (and, virtually, everything that follows it) onto
-the stack, and an instruction like `%` does have an arrow attached to
-it, but that arrow is ignored — an arrow popped off the stack is used
+where each → is a continuation, and ■ is HALT, and execution happens by
+executing an instruction, then just following the attached continuation
+arrow to get the next thing to execute.  An instruction like `S` has the
+effect of pushing the arrow (and, virtually, everything that follows it)
+onto the stack, and an instruction like `%` does have an arrow attached
+to it, but that arrow is ignored — an arrow popped off the stack is used
 instead.
 
 But one implication of this is that an Oxcart program can't access
