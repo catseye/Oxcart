@@ -258,9 +258,10 @@ as usual.  The result is only the initial 3 on the stack.
 ### Infinite loop
 
 So we want to write an infinite loop.  In high-level terms, we need to
-save the current continuation as k.  (Note that when we continue k,
-we'll end up back at this point.)  Then we want to continue k.
-(Note that, since we end up back at that point, we never get here.)
+save the current continuation in a value _k_.  (Note that when we continue
+_k_, we'll end up back at this point.)  Then we want to continue _k_.
+(Note that, since we end up back at that point noted previously, we never
+get to this point.)
 
 We can write this in Oxcart as:
 
@@ -271,6 +272,33 @@ to terminate.  But it is provided as a discrete program in the `eg/`
 directory, if you want to run it.)
 
 ### Controlled loop
+
+So we want to write a loop that terminates.  Say we want to generate
+the numbers from 10 down to 0.  In high-level terms, we set a value
+_n_ to 10, and save the current continuation as _k_.  Then we make
+a copy of _n_ and decrement it to obtain _n'_.  Then we make a copy
+of _n'_ and test if it's zero.  If it is, we're done.  If not, we
+continue _k_.
+
+We can twrite this in Oxcart as:
+
+    move left
+    push 10 on stack
+    move right
+    push current continuation on stack
+    duplicate
+    move left
+    duplicate
+    decrement
+    duplicate
+    transfer right
+    continue conditionally
+
+    | <0^^^^^^^^^^>S:<:v:)%
+    =  -1:[0,1,2,3,4,5,6,7,8,9,10]
+    = > 0:[#k]
+
+### While loop?
 
 TBW
 
