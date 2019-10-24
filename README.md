@@ -305,6 +305,12 @@ Or, as an actual Oxcart program:
 
 ### While loop?
 
+So, while we've demonstrated it's possible to write a controlled loop,
+it is in fact a "repeat" (or "do") type loop, where the loop body is
+always executed at least once.  What about a "while" type loop, where
+the loop body might not be executed at all, if the loop condition isn't
+true when the loop starts?
+
 You may have noticed that the "current continuation" is a very palpable
 concept in Oxcart; using the infinite loop program to illustrate, it is
 almost as if concatenating the program symbols results in a program
@@ -313,8 +319,8 @@ structured like this:
     S → : → 0 → ^ → % → ■
 
 where each → is a continuation, and ■ is HALT, and execution happens by
-executing an instruction, then just following the attached continuation
-arrow to get the next thing to execute.  An instruction like `S` has the
+executing one instruction, then just following the attached arrow to get
+to the next instruction to execute.  An instruction like `S` has the
 effect of pushing the arrow (and, virtually, everything that follows it)
 onto the stack, and an instruction like `%` does have an arrow attached
 to it, but that arrow is ignored — an arrow popped off the stack is used
@@ -325,11 +331,45 @@ any continuation it hasn't already "seen", i.e. any continuations that
 it might encounter down the line, in the future.  In more pedestrian
 terms, you can't denote a forward jump.
 
-So, while we've demonstrated it's possible to write a controlled loop,
-it is in fact a "repeat" (or "do") type loop, where the loop body is
-always executed at least once.  What about a "while" type loop, where
-the loop body might not be executed at all, if the loop condition isn't
-true when the loop starts?
+And that means we can't write a "while" loop in the usual manner.
+
+But perhaps we can write one in a slightly unconventional manner.
+
+The idea is this: the body of the loop is executed at least once,
+but it is executed in a context where it has no effect on anything
+we care about.
+
+This might not work, but let's try to work it out.
+
+So we want to write a "while" loop.  Say we have an _n_ on the
+stack, and we want to loop _n_ times, and _n_ might be zero.
+
+In high-level terms, we first move to a "garbage" stack and
+place a "garbage _n_" on it.
+
+Then, we save the current continuation as _k_.
+
+We test if _n_ is zero.  If it is, we switch to a garbage stack.
+
+Then, assuming we're on the real stack, we make a copy of _n_ and
+decrement it to obtain _n'_.  Then we make a copy of _n'_ and test
+if it's zero.  If it is, we're done.  If not, we continue _k_.
+
+But, assuming we're on the garbage stack, the above becomes:
+we make a copy of garbage _n_ and decrement it to obtain
+garbage _n'_.  Then we make a copy of garbage _n'_ and test
+if it's zero.  If it is, we're done.  If not, we continue _k_.
+
+This suggests our initial garbage _n_ should be 1.
+
+The problem is that we want to switch back from the
+garbage stack to the real stack if previously we were on
+the garbage stack.
+
+Can we can write this in Oxcart?  We may have to add a few
+instructions.  Possibly "save stack index on stack" and
+"restore stack index".  Also "pop value and add it to
+stack index".
 
 ...
 
