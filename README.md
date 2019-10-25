@@ -369,27 +369,28 @@ This might not work, but let's try to work it out.
 So we want to write a "while" loop.  Say we have an _n_ on the
 stack, and we want to loop _n_ times, and _n_ might be zero.
 
-In high-level terms, we first move to a "garbage" stack and
-place a "garbage _n_" on it.
+In high-level terms, we first move to a "junk stack" and
+place a "junk _n_" on it.
 
 Then, we save the current continuation as _k_.
 
-We test if _n_ is zero.  If it is, we switch to a garbage stack.
+We test if _n_ is zero.  If it is, we switch to a junk stack.
 
 Then, assuming we're on the real stack, we make a copy of _n_ and
 decrement it to obtain _n'_.  Then we make a copy of _n'_ and test
 if it's zero.  If it is, we're done.  If not, we continue _k_.
 
-But, assuming we're on the garbage stack, the above becomes:
-we make a copy of garbage _n_ and decrement it to obtain
-garbage _n'_.  Then we make a copy of garbage _n'_ and test
+But, assuming we're on the junk stack, the above becomes:
+we make a copy of junk _n_ and decrement it to obtain
+junk _n'_.  Then we make a copy of junk _n'_ and test
 if it's zero.  If it is, we're done.  If not, we continue _k_.
 
-This suggests our initial garbage _n_ should be 1.
+This suggests our initial junk _n_ should be 1.
 
 The problem is that we want to switch back from the
-garbage stack to the real stack if previously we were on
-the garbage stack.
+junk stack to the real stack if previously we were on
+the junk stack.  (This is what preciptated adding the
+`'` instruction to the language.)
 
 Can we can write this in Oxcart?
 
