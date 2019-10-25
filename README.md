@@ -409,28 +409,23 @@ Can we can write this in Oxcart?
 *   reset to the main stack
 *   continue conditionally
 
-Is this it?
-
-    > | 0^^^^^
-    > | (<0^'S:<:0v\:v:)'%
-    > =  -2:[1]
-    > =  -1:[5]
+Is this it?  With n=5:
 
     | 0^^^^^
-    | (<0^'S:<:0v\0
+    | (<0^'S:<:0v\Y:v:)'%
     =  -2:[1]
-    =  -1:[5]
+    =  -1:[0,1,2,3,4,5]
+    = > 0:[#k]
 
-OK. Let's try implementing it in small bits, then put them all together.
+And with n=0:
 
-We demonstrate (with an initial n=5) that we can move _n_ to the
-"data stack" (stack -1), then put a 1 on the "garbage stack"
-(stack -2),
-
-    | 0^^^^^
-    | (<0^'
+    | 0
+    | (<0^'S:<:0v\Y:v:)'%
     =  -2:[1]
-    =  -1:[5]
+    =  -1:[0,1,2,3,4,5]
+    = > 0:[#k]
+
+Oh no!
 
 ### Minimality of Oxcart
 
