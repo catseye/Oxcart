@@ -412,27 +412,25 @@ Can we can write this in Oxcart?
 *   duplicate
 *   decrement
 *   duplicate
-*   transfer right (this is the test value - ah, but it needs to always get to the main stack somehow!)
-*   reset to the main stack
+*   transfer value to the main stack (this is the test value)
 *   continue conditionally
+*   pop and discard the original pushed continuation
 
 Is this it?  With n=5:
 
     | 0^^^^^
-    | (<0^'S:<:0v\Y:v:)'%
+    | (<0^'S:<:0v\Y:v:0T%$
     =  -2:[1]
     =  -1:[0,1,2,3,4,5]
-    = > 0:[#k]
 
 And with n=0:
 
     | 0
-    | (<0^'S:<:0v\Y:v:)'%
-    =  -2:[1]
-    =  -1:[0,1,2,3,4,5]
-    = > 0:[#k]
+    | (<0^'S:<:0v\Y:v:0T%$
+    =  -2:[0,1]
+    =  -1:[0]
 
-Oh no!
+Hooray!  I think we just built a while loop.
 
 ### Minimality of Oxcart
 
@@ -441,7 +439,7 @@ not needed to be Turing-complete.
 
 One could say that "Core Oxcart" omits the following operations:
 
-    X<>\\
+    X<>\\'
 
 `X` can probably be implemented with a loop.
 
@@ -456,6 +454,8 @@ One could say that "Core Oxcart" omits the following operations:
 
     | 0^0^^)<(>>(<)
     = > 0:[1,2]
+
+`'` can be implemented with `T`.
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
