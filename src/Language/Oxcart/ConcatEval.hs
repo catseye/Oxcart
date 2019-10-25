@@ -49,7 +49,7 @@ swap st k =
         (Just a, st') = pop st
         (Just b, st'') = pop st'
     in
-        k $ push a (push b st'')
+        k $ push b (push a st'')
 
 left st k = k $ shift (-1) st
 right st k = k $ shift 1 st
