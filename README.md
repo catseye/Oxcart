@@ -252,11 +252,11 @@ tape position (negative values go left, positive values go right).
 
 ### Operations involving continuations
 
-The instruction `S` pushes the current continuation onto the stack.
+The instruction `*` pushes the current continuation onto the stack.
 Note that continuations don't have a defined representation other
 than `#k`.
 
-    | S
+    | *
     = > 0:[#k]
 
 The instruction `%` pops a first value off the stack, then a second
@@ -265,19 +265,19 @@ value off the stack.
 If the first value is zero, nothing happens and evaluation continues
 as usual.
 
-    | S0%
+    | *0%
     = 
 
 But if the first value is non-zero, it replaces the current continuation
 with the second value, and continues with that continuation.
 
-    | 0^^^0S0^%
+    | 0^^^0*0^%
     = > 0:[3]
 
 In the preceding example, when `%` is evaluated, the 1 pushed by the `0^`
-just before the `%`, and the continuation pushed by `S`, are popped off
+just before the `%`, and the continuation pushed by `*`, are popped off
 the stack (leaving 0 and 3 on the stack.)  The 1 is judged to be non-zero,
-so the continuation pushed by `S` is continued.  That continuation
+so the continuation pushed by `*` is continued.  That continuation
 represents the remainder of the program that consists of `0^%`.  So a
 1 is pushed onto the stack and `%` is evaluated again.  But this time
 `%` gets a 1 and a 0, which is not a continuation, so things continue
@@ -293,7 +293,7 @@ get to this point.)
 
 We can write this in Oxcart as:
 
-    S:0^%
+    *:0^%
 
 (We don't write this as a Falderal test, because we want all our tests
 to terminate.  But it is provided as a discrete program in the `eg/`
@@ -324,7 +324,7 @@ We can write this in Oxcart as:
 
 Or, as an actual Oxcart program:
 
-    | <0^^^^^^^^^^>S:<:v:)%
+    | <0^^^^^^^^^^>*:<:v:)%
     =  -1:[0,1,2,3,4,5,6,7,8,9,10]
     = > 0:[#k]
 
@@ -341,11 +341,11 @@ concept in Oxcart; using the infinite loop program to illustrate, it is
 almost as if concatenating the program symbols results in a program
 structured like this:
 
-    S→:→0→^→%→■
+    *→:→0→^→%→■
 
 where each → is a continuation, and ■ is HALT, and execution happens by
 executing one instruction, then just following the attached arrow to get
-to the next instruction to execute.  An instruction like `S` has the
+to the next instruction to execute.  An instruction like `*` has the
 effect of pushing the arrow (and, virtually, everything that follows it)
 onto the stack, and an instruction like `%` also has an arrow attached
 to it, but that arrow is ignored; an arrow popped off the stack is
@@ -369,27 +369,27 @@ This might not work, but let's try to work it out.
 So we want to write a "while" loop.  Say we have an _n_ on the
 stack, and we want to loop _n_ times, and _n_ might be zero.
 
-In high-level terms, we first move to a "garbage" stack and
-place a "garbage _n_" on it.
+In high-level terms, we first move to a "junk stack" and
+place a "junk _n_" on it.
 
 Then, we save the current continuation as _k_.
 
-We test if _n_ is zero.  If it is, we switch to a garbage stack.
+We test if _n_ is zero.  If it is, we switch to the junk stack.
 
 Then, assuming we're on the real stack, we make a copy of _n_ and
 decrement it to obtain _n'_.  Then we make a copy of _n'_ and test
 if it's zero.  If it is, we're done.  If not, we continue _k_.
 
-But, assuming we're on the garbage stack, the above becomes:
-we make a copy of garbage _n_ and decrement it to obtain
-garbage _n'_.  Then we make a copy of garbage _n'_ and test
+But, assuming we're on the junk stack, the above becomes:
+we make a copy of junk _n_ and decrement it to obtain
+junk _n'_.  Then we make a copy of junk _n'_ and test
 if it's zero.  If it is, we're done.  If not, we continue _k_.
 
-This suggests our initial garbage _n_ should be 1.
+This suggests our initial junk _n_ should be 1.
 
-The problem is that we want to switch back from the
-garbage stack to the real stack if previously we were on
-the garbage stack.
+The problem is that we want to switch back from the junk stack
+to the real stack if previously we were on the junk stack.  (This
+precipitated the addition of `'` to the language.)
 
 Can we can write this in Oxcart?
 
@@ -412,14 +412,14 @@ Can we can write this in Oxcart?
 Is this it?  With n=5:
 
     | 0^^^^^
-    | (<0^00'$S:<:0v\Y:v:0'%$
+    | (<0^00'$*:<:0v\Y:v:0'%$
     =  -2:[1]
     =  -1:[0,1,2,3,4,5]
 
 And with n=0:
 
     | 0
-    | (<0^00'$S:<:0v\Y:v:0'%$
+    | (<0^00'$*:<:0v\Y:v:0'%$
     =  -2:[0,1]
     =  -1:[0]
 

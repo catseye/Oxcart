@@ -109,7 +109,7 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' 'Y' = swch
         m' '\'' = tele
 
-        m' 'S' = save
+        m' '*' = save
         m' '%' = rsr
         -- m' '~' = cont
         -- m' '_' = swpk
