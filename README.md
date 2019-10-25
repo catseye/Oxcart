@@ -18,7 +18,7 @@ If conventional function composition is defined as
 
     (f ∘ g)(x) = g(f(x))
 
-then (rather arbitrarily picking the symbol ⊛ to denote it) composition
+then, rather arbitrarily picking the symbol ⊛ to denote it, composition
 of CPS functions can be defined as
 
     (f ⊛ g)(x, κ) = f(x, λs. g(s, κ))
@@ -58,12 +58,12 @@ because
 
 Can we devise an identity CPS function?  I think it might be:
 
-    e(x, κ) = κ(x)
+    ι(x, κ) = κ(x)
 
 and this is an identity because
 
-    (e ⊛ f)(x, κ) = e(x, λs. f(s, κ)) = (λs. f(s, κ))(x) = f(x, κ)
-    (f ⊛ e)(x, κ) = f(x, λs. e(s, κ)) = f(x, λs. κ(s))) = f(x, κ)
+    (ι ⊛ f)(x, κ) = ι(x, λs. f(s, κ)) = (λs. f(s, κ))(x) = f(x, κ)
+    (f ⊛ ι)(x, κ) = f(x, λs. ι(s, κ)) = f(x, λs. κ(s))) = f(x, κ)
 
 And is ⊕  associative?  Well, let's try expanding it:
 
@@ -330,9 +330,7 @@ We can write this in Oxcart as:
 
 Or, as an actual Oxcart program:
 
-    |
-    |    <0^^^^^^^^^^>S:<:v:)%
-    | 
+    | <0^^^^^^^^^^>S:<:v:)%
     =  -1:[0,1,2,3,4,5,6,7,8,9,10]
     = > 0:[#k]
 
@@ -349,15 +347,15 @@ concept in Oxcart; using the infinite loop program to illustrate, it is
 almost as if concatenating the program symbols results in a program
 structured like this:
 
-    S → : → 0 → ^ → % → ■
+    S→:→0→^→%→■
 
 where each → is a continuation, and ■ is HALT, and execution happens by
 executing one instruction, then just following the attached arrow to get
 to the next instruction to execute.  An instruction like `S` has the
 effect of pushing the arrow (and, virtually, everything that follows it)
-onto the stack, and an instruction like `%` does have an arrow attached
-to it, but that arrow is ignored — an arrow popped off the stack is used
-instead.
+onto the stack, and an instruction like `%` also has an arrow attached
+to it, but that arrow is ignored; an arrow popped off the stack is
+followed instead.
 
 But one implication of this is that an Oxcart program can't access
 any continuation it hasn't already "seen", i.e. any continuations that
@@ -399,12 +397,20 @@ The problem is that we want to switch back from the
 garbage stack to the real stack if previously we were on
 the garbage stack.
 
-Can we can write this in Oxcart?
+Can we can write this in Oxcart?  Let's try implementing it in
+small bits, then put them all together.
 
 *   transfer left (to move n to the cycling stack, -1)
 *   move left (to garbage stack, -2)
 *   push 1 on stack
 *   reset to the main stack
+
+Pushing an n=5 first to demonstrate,
+
+    | 0^^^^^
+    | (<0^'
+    =  -2:[1]
+    =  -1:[5]
 
 *   push current continuation on stack
 *   duplicate
