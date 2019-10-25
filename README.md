@@ -200,8 +200,8 @@ it.
 The instruction `\\` pops the top two values, swaps them, and pushes
 them back on the stack.
 
-    | 0^XXX0^\
-    = > 0:[1,8]
+    | 0^XXX0^\0^^
+    = > 0:[2,1,8]
 
 ### Navigating the stacks
 
@@ -411,10 +411,15 @@ Can we can write this in Oxcart?
 
 Is this it?
 
-    > | 0^^^^^
-    > | (<0^'S:<:0v\:v:)'K
-    > =  -2:[1]
-    > =  -1:[5]
+    | 0^^^^^
+    | (<0^'S:<:0v\:v:)'K
+    =  -2:[1]
+    =  -1:[5]
+
+    | 0^^^^^
+    | (<0^'S:<:0v\
+    =  -2:[1]
+    =  -1:[5]
 
 OK. Let's try implementing it in small bits, then put them all together.
 
