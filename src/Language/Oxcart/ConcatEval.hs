@@ -54,7 +54,6 @@ left st k = k $ shift (-1) st
 right st k = k $ shift 1 st
 cleft st k = k $ carry (-1) st
 cright st k = k $ carry 1 st
-reset st k = k $ moveTo 0 st
 swch st k =
     let
         (Just (Num n), st') = pop st
@@ -107,9 +106,8 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' '>' = right
         m' '(' = cleft
         m' ')' = cright
-        m' '\'' = reset
         m' 'Y' = swch
-        m' 'T' = tele
+        m' '\'' = tele
 
         m' 'S' = save
         m' '%' = rsr

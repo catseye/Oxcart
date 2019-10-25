@@ -216,12 +216,19 @@ onto the new current stack.
     = >-1:[10]
     =   0:[4]
 
-The instruction `'` (apostrophe) makes stack zero (the stack that
-was current when the program started) the current stack, no matter
-what stack is currently the current stack.
+The instruction `'` (apostrophe) pops a first value off the stack, then
+a second value.  It then sets the tape position to the first value, and
+pushes the second value back on the (probably newly current) stack.
 
-    | >>>'0^>>'0^
-    = > 0:[1,1]
+    | <0^^^0^^^^^0^'
+    =  -1:[3]
+    = > 1:[5]
+
+You can of course push a dummy value, then discard it after moving it,
+if all you want to do is change to a different stack.
+
+    | <<<<<<00'$ 0^
+    = > 0:[1]
 
 The instruction `Y` pops a first value off the stack, then a second
 value off the stack.
@@ -242,14 +249,6 @@ tape position (negative values go left, positive values go right).
     | 0^^0v0Y0^^^
     = >-1:[3]
     =   0:[2]
-
-The instruction `T` pops a first value off the stack, then a second
-value.  It then sets the tape position to the first value, and pushes
-the second value back on the (probably newly current) stack.
-
-    | <0^^^0^^^^^0^T
-    =  -1:[3]
-    = > 1:[5]
 
 ### Operations involving continuations
 
@@ -413,14 +412,14 @@ Can we can write this in Oxcart?
 Is this it?  With n=5:
 
     | 0^^^^^
-    | (<0^'S:<:0v\Y:v:0T%$
+    | (<0^00'$S:<:0v\Y:v:0'%$
     =  -2:[1]
     =  -1:[0,1,2,3,4,5]
 
 And with n=0:
 
     | 0
-    | (<0^'S:<:0v\Y:v:0T%$
+    | (<0^00'$S:<:0v\Y:v:0'%$
     =  -2:[0,1]
     =  -1:[0]
 
@@ -431,14 +430,14 @@ Hooray!  I think we just built a while loop.
 Oxcart is not a minimal language.  It defines operations that are
 not needed to be Turing-complete.
 
-One could say that "Core Oxcart" omits the following operations:
+One could define a "Core Oxcart" that omits the following operations:
 
-    <>\\'
+    <>\\
 
-`<` and `>` can be thought of as just shorthands for `0v0^Y` and
-`0^0^Y`.
+Because `<` and `>` can be thought of as just shorthands for `0v0^Y`
+and `0^0^Y`.
 
-`\\` can be implemented with `<()>`, or in fact you can build a
+And `\\` can be implemented with `<()>`, or in fact you can build a
 "rotate" of arbitrary finite depth with those.
 
     | 0^0^^
@@ -447,7 +446,9 @@ One could say that "Core Oxcart" omits the following operations:
     | 0^0^^)<(>>(<)
     = > 0:[1,2]
 
-`'` can be implemented with `T`.
+It's possible Core Oxcart could omit other operations, too, if it turns
+out there is a way to formulate a "while" loop in some other way than
+how we've formulated one above.
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
