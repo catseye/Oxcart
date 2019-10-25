@@ -395,7 +395,7 @@ the junk stack.  (This is what preciptated adding the
 Can we can write this in Oxcart?
 
 *   transfer left (to move n to the data stack, -1)
-*   move left (to garbage stack, -2)
+*   move left (to junk stack, -2)
 *   push 1 on stack
 *   reset to the main stack
 *   push current continuation on stack
@@ -424,7 +424,12 @@ And with n=0:
     =  -2:[0,1]
     =  -1:[0]
 
-Hooray!  I think we just built a while loop.
+Hooray!  I think we just built a while loop.  You might need one
+junk stack per while loop, but you'd only have a finite and fixed
+number of while loops in a typical program.
+
+I have not shown that it is possible to nest while loops, but I
+also cannot see any reason offhand why it would not be possible.
 
 ### Minimality of Oxcart
 
