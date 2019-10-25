@@ -64,6 +64,13 @@ swch st k =
         case (n, v) of
             (0, (Num d))  -> k (shift (fromIntegral d) st'')
             (_, _)        -> k st''
+tele st k =
+    let
+        (Just (Num n), st') = pop st
+        (Just v, st'') = pop st'
+        st''' = moveTo (fromIntegral n) st''
+    in
+        k $ push v st'''
 
 save st k = k $ push (Cont k) st
 rsr st k =
@@ -104,6 +111,7 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' ')' = cright
         m' '\'' = reset
         m' 'Y' = swch
+        m' 'T' = tele
 
         m' 'S' = save
         m' '%' = rsr

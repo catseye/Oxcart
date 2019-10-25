@@ -239,8 +239,7 @@ and evaluation continues as usual.
     = > 0:[3,2]
 
 But if the first value is zero, the second value is added to the
-position of the tape cell (negative values go left, positive values
-go right).
+tape position (negative values go left, positive values go right).
 
     | 0^^0^0Y0^^^
     =   0:[2]
@@ -249,6 +248,14 @@ go right).
     | 0^^0v0Y0^^^
     = >-1:[3]
     =   0:[2]
+
+The instruction `T` pops a first value off the stack, then a second
+value.  It then sets the tape position to the first value, and pushes
+the second value back on the (probably newly current) stack.
+
+    | <0^^^0^^^^^0^T
+    =  -1:[3]
+    = > 1:[5]
 
 ### Operations involving continuations
 
@@ -405,7 +412,7 @@ Can we can write this in Oxcart?
 *   duplicate
 *   decrement
 *   duplicate
-*   transfer right (this is the test value)
+*   transfer right (this is the test value - ah, but it needs to always get to the main stack somehow!)
 *   reset to the main stack
 *   continue conditionally
 
