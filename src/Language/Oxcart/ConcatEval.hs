@@ -56,8 +56,7 @@ swch st k =
         (Just v, st'') = pop st'
     in
         case (n, v) of
-            (0, _)        -> k st''
-            (_, (Num d))  -> k (shift (fromIntegral d) st'')
+            (0, (Num d))  -> k (shift (fromIntegral d) st'')
             (_, _)        -> k st''
 
 save st k = k $ push (Cont k) st

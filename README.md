@@ -235,26 +235,23 @@ what stack is currently the current stack.
 The instruction `Y` pops a first value off the stack, then a second
 value off the stack.
 
-If the first value is zero, nothing happens and evaluation continues
-as usual.
+If the first value is non-zero, nothing else in particular happens
+and evaluation continues as usual.
 
-    | 0^^0^0Y0^^^
+    | 0^^0^0^Y0^^^
     = > 0:[3,2]
 
-If the first value is non-zero, the second value is added to the
+But if the first value is zero, the second value is added to the
 position of the tape cell (negative values go left, positive values
 go right).
 
-    | 0^^0^0^Y0^^^
+    | 0^^0^0Y0^^^
     =   0:[2]
     = > 1:[3]
 
-    | 0^^0v0^Y0^^^
+    | 0^^0v0Y0^^^
     = >-1:[3]
     =   0:[2]
-
-Indeed, `<` and `>` can be thought of as just shorthands for
-`0v0^Y` and `0^0^Y`.
 
 ### Operations involving continuations
 
@@ -397,34 +394,50 @@ The problem is that we want to switch back from the
 garbage stack to the real stack if previously we were on
 the garbage stack.
 
-Can we can write this in Oxcart?  Let's try implementing it in
-small bits, then put them all together.
+Can we can write this in Oxcart?
 
-*   transfer left (to move n to the cycling stack, -1)
+*   transfer left (to move n to the data stack, -1)
 *   move left (to garbage stack, -2)
 *   push 1 on stack
 *   reset to the main stack
-
-Pushing an n=5 first to demonstrate,
-
-    | 0^^^^^
-    | (<0^'
-    =  -2:[1]
-    =  -1:[5]
-
 *   push current continuation on stack
 *   duplicate
-
 *   move left
 *   duplicate
-*   pop and if value is zero move one stack to the left (we may need to invert the sense of Y)
-
+*   pop and if value is zero move one stack to the left
 *   duplicate
 *   decrement
 *   duplicate
 *   transfer right (this is the test value)
 *   reset to the main stack
 *   continue conditionally
+
+Is this it?
+
+    | 0^^^^^
+    | (<0^'S:<:0v\:v:)'K
+    =  -2:[1]
+    =  -1:[5]
+
+OK. Let's try implementing it in small bits, then put them all together.
+
+We demonstrate (with an initial n=5) that we can move _n_ to the
+"data stack" (stack -1), then put a 1 on the "garbage stack"
+(stack -2),
+
+    | 0^^^^^
+    | (<0^'
+    =  -2:[1]
+    =  -1:[5]
+
+### Minimality of Oxcart
+
+Oxcart is not a minimal language.  It defines operations that are
+not needed to be Turing-complete.
+
+One could say that "Core Oxcart" omits the operation `X`, which can
+probably be implemented with a loop, as well as `<` and `>`, which
+can be thought of as just shorthands for `0v0^Y` and `0^0^Y`.
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
