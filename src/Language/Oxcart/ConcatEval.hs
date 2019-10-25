@@ -44,6 +44,12 @@ decr st k = let (Just (Num n), st') = pop st in k (push (Num (n-1)) st')
 dbl st k = let (Just (Num n), st') = pop st in k (push (Num (n*2)) st')
 dup st k = let (Just v, st') = pop st in k (push v (push v st'))
 pop' st k = let (Just v, st') = pop st in k st'
+swap st k = 
+    let
+        (Just a, st') = pop st
+        (Just b, st'') = pop st'
+    in
+        push a (push b st'')
 
 left st k = k $ shift (-1) st
 right st k = k $ shift 1 st
@@ -90,6 +96,7 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' 'X' = dbl
         m' ':' = dup
         m' '$' = pop'
+        m' '\\' = swap
 
         m' '<' = left
         m' '>' = right

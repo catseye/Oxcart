@@ -197,6 +197,12 @@ it.
     | 0^XXX$
     = 
 
+The instruction `\\` pops the top two values, swaps them, and pushes
+them back on the stack.
+
+    | 0^XXX0^\
+    = > 0:[1,8]
+
 ### Navigating the stacks
 
 The instruction `<` (resp `>`) moves one space left (resp. right)
@@ -215,15 +221,6 @@ onto the new current stack.
     =  -2:[8]
     = >-1:[16]
     =   0:[4]
-
-Using the above four instructions we can perform a "swap", or in
-fact a "rotate" of arbitrary finite depth.
-
-    | 0^0^^
-    = > 0:[2,1]
-
-    | 0^0^^)<(>>(<)
-    = > 0:[1,2]
 
 The instruction `'` (apostrophe) makes stack zero (the stack that
 was current when the program started) the current stack, no matter
@@ -414,10 +411,10 @@ Can we can write this in Oxcart?
 
 Is this it?
 
-    | 0^^^^^
-    | (<0^'S:<:0v\:v:)'K
-    =  -2:[1]
-    =  -1:[5]
+    > | 0^^^^^
+    > | (<0^'S:<:0v\:v:)'K
+    > =  -2:[1]
+    > =  -1:[5]
 
 OK. Let's try implementing it in small bits, then put them all together.
 
@@ -435,9 +432,23 @@ We demonstrate (with an initial n=5) that we can move _n_ to the
 Oxcart is not a minimal language.  It defines operations that are
 not needed to be Turing-complete.
 
-One could say that "Core Oxcart" omits the operation `X`, which can
-probably be implemented with a loop, as well as `<` and `>`, which
-can be thought of as just shorthands for `0v0^Y` and `0^0^Y`.
+One could say that "Core Oxcart" omits the following operations:
+
+    X<>\\
+
+`X` can probably be implemented with a loop.
+
+`<` and `>` can be thought of as just shorthands for `0v0^Y` and
+`0^0^Y`.
+
+`\\` can be implemented with `<()>`, or in fact you can build a
+"rotate" of arbitrary finite depth with those.
+
+    | 0^0^^
+    = > 0:[2,1]
+
+    | 0^0^^)<(>>(<)
+    = > 0:[1,2]
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
