@@ -41,7 +41,6 @@ nop st k = k st
 push0 st k = k $ push (Num 0) st
 incr st k = let (Just (Num n), st') = pop st in k (push (Num (n+1)) st')
 decr st k = let (Just (Num n), st') = pop st in k (push (Num (n-1)) st')
-dbl st k = let (Just (Num n), st') = pop st in k (push (Num (n*2)) st')
 dup st k = let (Just v, st') = pop st in k (push v (push v st'))
 pop' st k = let (Just v, st') = pop st in k st'
 swap st k = 
@@ -100,7 +99,6 @@ m (x:xs) = (m' x) `composeCPS` (m xs)
         m' '0' = push0
         m' '^' = incr
         m' 'v' = decr
-        m' 'X' = dbl
         m' ':' = dup
         m' '$' = pop'
         m' '\\' = swap

@@ -179,28 +179,22 @@ current stack.
     | 0^^^0vv
     = > 0:[-2,3]
 
-The instruction `X` pops a value from the current stack, doubles
-it, and pushes the result back onto the current stack.
-
-    | 0^XXXX
-    = > 0:[16]
-
 The instruction `:` pops a value from the current stack and pushes
 two copies of the value back on the stack.
 
-    | 0^XXX:^
+    | 0^^^^^^^^:^
     = > 0:[9,8]
 
 The instruction `$` pops a value from the current stack and discards
 it.
 
-    | 0^XXX$
+    | 0^^^^^$
     = 
 
 The instruction `\\` pops the top two values, swaps them, and pushes
 them back on the stack.
 
-    | 0^XXX0^\0^^
+    | 0^^^^^^^^0^\0^^
     = > 0:[2,8,1]
 
 ### Navigating the stacks
@@ -208,8 +202,8 @@ them back on the stack.
 The instruction `<` (resp `>`) moves one space left (resp. right)
 on the tape, changing which stack is the current stack.
 
-    | 0^XX<0^XXX<0^XXXX>
-    =  -2:[16]
+    | 0^^^^<0^^^^^^^^<0^^^^^^^^^^>
+    =  -2:[10]
     = >-1:[8]
     =   0:[4]
 
@@ -217,9 +211,9 @@ The instruction `(` (resp `)`) pops a value off the current stack,
 moves one space left (resp. right) on the tape, and pushes the value
 onto the new current stack.
 
-    | 0^XX<0^XXX(0^XXXX)
+    | 0^^^^<0^^^^^^^^(0^^^^^^^^^^)
     =  -2:[8]
-    = >-1:[16]
+    = >-1:[10]
     =   0:[4]
 
 The instruction `'` (apostrophe) makes stack zero (the stack that
@@ -439,9 +433,7 @@ not needed to be Turing-complete.
 
 One could say that "Core Oxcart" omits the following operations:
 
-    X<>\\'
-
-`X` can probably be implemented with a loop.
+    <>\\'
 
 `<` and `>` can be thought of as just shorthands for `0v0^Y` and
 `0^0^Y`.
