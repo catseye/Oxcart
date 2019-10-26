@@ -424,9 +424,9 @@ And with n=0:
     =  -2:[0,1]
     =  -1:[0]
 
-Hooray!  I think we just built a while loop.  You might need one
-junk stack per while loop, but you'd only have a finite and fixed
-number of while loops in a typical program.
+Hooray!  I think we just built a while loop.  One might need one
+junk stack per while loop, but one would only have a finite and
+fixed number of while loops in any given program anyway.
 
 I have not shown that it is possible to nest while loops, but I
 also cannot see any reason offhand why it would not be possible.
@@ -455,6 +455,19 @@ And `\\` can be implemented with `<()>`, or in fact you can build a
 It's possible Core Oxcart could omit other operations, too, if it turns
 out there is a way to formulate a "while" loop in some other way than
 how we've formulated one above.
+
+In fact the `'` operation is very powerful, rather repulsively so;
+it's the only operation that lets you address tape cells in an
+absolute fashion.  You might be able to use it where you would
+otherwise use `()`.  It would probably be nicer to replace it with
+something that also works relatively, like `<()>Y` do.
+
+But the goal of Oxcart was not to make a "nice esolang", and in
+fact the whole "tape of stacks" thing was entirely a secondary
+design choice; the main goal was to show that a contiuation-passing
+concatenative language was viable, and I think it achieved that
+goal.  Making a CPS concatenative language which is also a
+"nice esolang" can be saved for future work.
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
