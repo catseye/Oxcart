@@ -428,13 +428,18 @@ Hooray!  I think we just built a while loop.  One might need one
 junk stack per while loop, but one would only have a finite and
 fixed number of while loops in any given program anyway.
 
-I have not shown that it is possible to nest while loops, but I
-also cannot see any reason offhand why it would not be possible.
+I have not shown that it is possible to nest while loops.  Offhand,
+it seems plausible.  It may be slightly complicated, in that the
+top-level while loop must junk its first iteration only once, but
+the inner while loop needs to junk its first iteration many times.
+So there might need to be some code that resets the inner loop's
+junk stack to a safely junkable state.  But it definitely feels
+more like it's doable, than like it's insurmountable.
 
 ### Minimality of Oxcart
 
 Oxcart is not a minimal language.  It defines operations that are
-not needed to be Turing-complete.
+redundant with other operations.
 
 One could define a "Core Oxcart" that omits the following operations:
 
@@ -443,8 +448,7 @@ One could define a "Core Oxcart" that omits the following operations:
 Because `<` and `>` can be thought of as just shorthands for `0v0^Y`
 and `0^0^Y`.
 
-And `\\` can be implemented with `<()>`, or in fact you can build a
-"rotate" of arbitrary finite depth with those.
+And `\\` can be implemented using `<`, `(`, `)`, and `>`, as follows.
 
     | 0^0^^
     = > 0:[2,1]
@@ -452,15 +456,17 @@ And `\\` can be implemented with `<()>`, or in fact you can build a
     | 0^0^^)<(>>(<)
     = > 0:[1,2]
 
-It's possible Core Oxcart could omit other operations, too, if it turns
-out there is a way to formulate a "while" loop in some other way than
-how we've formulated one above.
+Or in fact you can build a "rotate" of arbitrary finite depth with
+those operations.
 
-In fact the `'` operation is very powerful, rather repulsively so;
-it's the only operation that lets you address tape cells in an
+It's possible Core Oxcart could omit other operations, too, if they
+turn out to be not critical for showing that it is Turing-complete.
+In particular, the `'` operation is very powerful, rather repulsively
+so; it's the only operation that lets you address tape cells in an
 absolute fashion.  You might be able to use it where you would
 otherwise use `()`.  It would probably be nicer to replace it with
-something that also works relatively, like `<()>Y` do.
+something that also works relatively, like `<`, `(`, `)`, `>`, and
+`Y` do.
 
 But the goal of Oxcart was not to make a "nice esolang", and in
 fact the whole "tape of stacks" thing was entirely a secondary
@@ -468,6 +474,11 @@ design choice; the main goal was to show that a contiuation-passing
 concatenative language was viable, and I think it achieved that
 goal.  Making a CPS concatenative language which is also a
 "nice esolang" can be saved for future work.
+
+Bumpy trails!  
+Chris Pressey  
+London, UK  
+October 28th, 2019
 
 [Carriage]: https://catseye.tc/node/Carriage
 [Equipage]: https://catseye.tc/node/Equipage
