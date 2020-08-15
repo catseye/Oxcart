@@ -3,9 +3,9 @@ Oxcart
 
 _Try it online_ [@ catseye.tc](https://catseye.tc/installation/Oxcart)
 | _Wiki entry_ [@ esolangs.org](https://esolangs.org/wiki/Oxcart)
-| _See also:_ [Carriage](https://github.com/catseye/Carriage)
-∘ [Equipage](https://github.com/catseye/Equipage)
-∘ [Wagon](https://github.com/catseye/Wagon)
+| _See also:_ [Carriage](https://github.com/catseye/Carriage#readme)
+∘ [Equipage](https://github.com/catseye/Equipage#readme)
+∘ [Wagon](https://github.com/catseye/Wagon#readme)
 
 - - - -
 
