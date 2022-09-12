@@ -1,6 +1,6 @@
 module Language.Oxcart.Store where
 
-import qualified Data.Map.Strict as Map
+import qualified Data.Map as Map
 
 
 data Elem = Num Int
